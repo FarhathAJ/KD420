@@ -12,6 +12,7 @@ def get_run_time(func):
         func(*args)
         time_taken = datetime.now() - start_time
         print(f"Time taken for {func} is {time_taken}")
+
     return wrapper
 
 
@@ -60,14 +61,13 @@ class opcua_monitor:
             if self.endpoint_con_status:
                 try:  # check for opcua connected
                     b = self.client.get_endpoints()
+
                     for tag_name, tag in self.tags.items():
-                        # print(tag)
                         try:
                             node = self.client.get_node(tag)
                             self.all_tags[tag_name] = node.get_value()
                         except Exception as e:
                             self.all_tags[tag_name] = 'XXXX'
-                            print(e)
                 except Exception as e:
                     print(e)
                     self.endpoint_con_status = False
@@ -86,6 +86,8 @@ class opcua_monitor:
             return 'S3'
         else:
             return 'S2'
+
+
 if __name__ == '__main__':
     try:
         CONFIG_DATA = json.loads(open('../config.json').read())

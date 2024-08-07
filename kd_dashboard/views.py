@@ -17,6 +17,7 @@ def create_objects():
         for server in CONFIG_DATA:
             globals()[server] = odc.opcua_monitor(CONFIG_DATA[server], server)
             threading.Thread(target=globals()[server].connect_server).start()
+            print(server , "object created")
     except Exception as e:
         print(e)
 
@@ -24,29 +25,30 @@ def create_objects():
 create_objects()
 
 
-def get_station_data(station_name):
-    print(f" page request for {station_name}")
-    return_data = globals()[station_name].all_tags
-    return_data['tack_time'] = 'xxxx'
-    # print("2222222", return_data)
-    return return_data
-
-def ajax_call(request,station_name):
-    return_data = globals()[station_name].all_tags
-    return_data['tack_time'] = 'xxxx'
-    # print("1111111",return_data)
-    return JsonResponse( return_data , safe=False )
 
 
 
+def ajax_call(request, plc_name , station_name):
+    all_plc_tags = globals()[plc_name].all_tags
+    station_tags = {}
+    for tag_name , value in all_plc_tags.items():
+        if tag_name.find(station_name) != -1:
+            station_tags[tag_name.split('|')[-1]] = value
 
-def main_page(request, station_name):
-    context = get_station_data(station_name)
+    return JsonResponse(station_tags, safe=False)
+
+
+def main_page(request,plc_name , station_name):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[-1].strip()
     else:
         ip = request.META.get('REMOTE_ADDR')
     print(",,,,,,,,,", ip)
-    return render(request, 'index.html')
+    context  = {
+        'plc_name' : plc_name,
+        'station_name':station_name
+    }
+
+    return render(request, 'index.html' , context)
     # return JsonResponse({"hello": station_name}, safe=False)

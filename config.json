@@ -1,31 +1,19 @@
 {
-  "Stn1": {
-      "server_config" : {
-            "end_point": "opc.tcp://10.141.45.247:4840"},
-      "tags": {
-              "ok_parts": "ns=2;s=ok_parts",
-              "nok_parts": "ns=2;s=nok_parts",
-              "cycletime": "ns=2;s=cycletime",
-              "emp_name": "ns=2;s=emp_name",
-              "emp_code": "ns=2;s=emp_code",
-              "model": "ns=2;s=model",
-              "sr_no": "ns=2;s=sr_no",
-              "shift": "ns=2;s=shift"
-            }
-  },
-
-  "Stn2": {
-       "server_config" : {
-            "end_point": "opc.tcp://10.141.45.247:4841"},
-      "tags": {
-          "ok_parts": "ns=2;s=ok_parts",
-          "nok_parts": "ns=2;s=nok_parts",
-          "cycletime": "ns=2;s=cycletime",
-          "emp_name": "ns=2;s=emp_name",
-          "emp_code": "ns=2;s=emp_code",
-          "model": "ns=2;s=model",
-          "sr_no": "ns=2;s=sr_no",
-          "shift": "ns=2;s=shift"
-      }
+  "PLC1": {
+    "server_config": {
+      "end_point": "opc.tcp://10.141.45.160:4840"
+    },
+    "tags": {
+      "OP10|ok_parts": "ns=3;s=\"O10IOTDB\".\"IOTData\".\"totalCountOkParts\"",
+      "OP10|nok_parts": "ns=3;s=\"O10IOTDB\".\"IOTData\".\"totalCountNokParts\"",
+      "OP10|cycle_time": "ns=3;s=\"O10IOTDB\".\"IOTData\".\"runningCycleTime\"",
+      "OP10|model_no": "ns=3;s=\"O10IOTDB\".\"IOTData\".\"modelNumber\"",
+      "OP10|takt_time": "ns=3;s=\"O10IOTDB\".\"IOTData\".\"runningCycleTime\"",
+      "OP30|ok_parts": "ns=3;s=\"OP30IOTDB\".\"IOTData\".\"totalCountOkParts\"",
+      "OP30|nok_parts": "ns=3;s=\"OP30IOTDB\".\"IOTData\".\"totalCountNokParts\"",
+      "OP30|cycle_time": "ns=3;s=\"OP30IOTDB\".\"IOTData\".\"runningCycleTime\"",
+      "OP30|model_no": "ns=3;s=\"OP30IOTDB\".\"IOTData\".\"modelNumber\"",
+      "OP30|takt_time": "ns=3;s=\"OP30IOTDB\".\"IOTData\".\"runningCycleTime\""
+    }
   }
 }

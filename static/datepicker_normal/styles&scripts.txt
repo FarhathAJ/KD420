@@ -1,0 +1,13 @@
+ <style>
+        .ui-datepicker {
+            font-size: 8pt !important;
+        }
+    </style>
+    <script>
+        $(function () {
+            $(".date").datepicker();
+        });
+    </script>
+
+
+<input type='text' ng-model="FDate" class="form-control date" />

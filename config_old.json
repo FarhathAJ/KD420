@@ -1,0 +1,32 @@
+{
+  "OP10": {
+      "server_config" : {
+            "end_point": "opc.tcp://10.141.45.160:4840"},
+      "tags": {
+              "ok_parts": "ns=3;s=\"O10IOTDB\".\"IOTData\".\"totalCountNokParts\"",
+              "nok_parts": "ns=2;s=nok_parts",
+              "cycletime": "ns=2;s=cycletime",
+              "emp_name": "ns=2;s=emp_name",
+              "emp_code": "ns=2;s=emp_code",
+              "model": "ns=2;s=model",
+              "sr_no": "ns=2;s=sr_no",
+              "shift": "ns=2;s=shift"
+            }
+  },
+
+  "Stn2": {
+       "server_config" : {
+            "end_point": "opc.tcp://10.141.45.211:4841"},
+      "tags": {
+          "ok_parts": "ns=2;s=ok_parts",
+          "nok_parts": "ns=2;s=nok_parts",
+          "cycletime": "ns=2;s=cycletime",
+          "emp_name": "ns=2;s=emp_name",
+          "emp_code": "ns=2;s=emp_code",
+          "model": "ns=2;s=model",
+          "sr_no": "ns=2;s=sr_no",
+          "shift": "ns=2;s=shift"
+      }
+  }
+}
+

@@ -1,386 +1,1308 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+    {% load static %}
+    <!-- Basic -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>:: THIS IS THE ONE ::</title>
+    <link rel="icon" href= "{% static 'images/teallogo.png' %}" type="image/x-icon">
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" href= "{% static 'vendor/bootstrap/css/bootstrap.css' %}" />
+    <link rel="stylesheet" href= "{% static 'vendor/font-awesome/css/font-awesome.css' %}" />
+    <link rel="stylesheet" href= "{% static 'vendor/magnific-popup/magnific-popup.css' %}" />
+    <!-- <link rel="stylesheet" href= "{% static 'vendor/bootstrap-datepicker/css/datepicker3.css" /> -->
+    <!-- Specific Page Vendor CSS -->
+    <link rel="stylesheet" href= "{% static 'vendor/jquery-ui/css/ui-lightness/jquery-ui-1.10.4.custom.css' %}" />
+    <link rel="stylesheet" href= "{% static 'vendor/bootstrap-multiselect/bootstrap-multiselect.css' %}" />
+    <link rel="stylesheet" href= "{% static 'vendor/morris/morris.css' %}" />
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href= "{% static 'stylesheets/theme.css' %}" />
+
+    <!-- Skin CSS -->
+    <link rel="stylesheet" href= "{% static 'stylesheets/skins/default.css' %}" />
+
+    <!-- Theme Custom CSS -->
+    <link rel="stylesheet" href= "{% static 'stylesheets/theme-custom.css' %}">
+
+    <!-- Head Libs -->
+    <!-- href= "{% static 'images/teallogo.png' %}"  -->
+    <script src= "{% static 'vendor/modernizr/modernizr.js' %}"></script>
+
+    <!-- Bargraph -->
+    <script src= "{% static 'Charts/Bargraph/Bargraph.js' %}"></script>
+    <script src= "{% static 'Charts/BarLinegraph/BargraphLinegraphTarget.js' %}"></script>
+    <script src= "{% static 'Charts/BarLinegraph/BargraphGroupedBarsLine.js' %}"></script>
+    <script src= "{% static 'Charts/CircularBargraph/Cicularbargraph.js' %}"></script>
+
+    <script type="text/javascript">
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+            return true;
+        }
+        function alphaOnly(evt) {
+            var key = (evt.which) ? evt.which : event.keyCode
+            if ((key >= 65 && key <= 90) || (key > 96 && key < 123) || key == 8)
+                return true;
+            return false;
+        };
+    </script>
+
     <style>
-        .info-container {
-            border: 1px solid #000;
-            padding: 10px;
+        .panel-body {
+            background: none !important;
+        }
+
+        select {
+            border: 1px solid #E5E7E9;
+            border-radius: 6px;
+            height: 20px !important;
+            padding: 0px !important;
+            outline: none;
+        }
+    </style>
+
+    <style>
+        body .btn-danger1 {
+            color: #ffffff;
+            text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+            background-color: #777777;
+            border-color: #cccccc;
+            height: 35px !important;
+            width: 80px;
+        }
+
+        .btn-danger1:hover {
+            color: #fff;
+        }
+
+        .container {
+            width: 15%;
+            float: left;
+            text-align: center;
+        }
+
+        .text {
+            color: black;
+            margin-bottom: 10px; /* Adjust the spacing between text and button */
+            font-weight: bold;
+        }
+    </style>
+
+    <!-- Live CT -->
+
+    <style>
+        .chart-container {
+            position: relative;
+            width: 80%;
+            margin: auto;
+            padding-top: 0px;
+        }
+
+        .chart-values, .chart-percentages {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            padding: 0 10px;
+            font-size: 14px;
+            color: blue;
         }
-        .left-section, .right-section {
-            display: flex;
-            align-items: center;
+
+        .chart {
+            position: relative;
+            width: 100%;
+            height: 30px;
+            background-color: lightgray;
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+            overflow: hidden;
         }
-        .left-section img, .right-section img {
-            width: 180px;
-            margin-right: 10px;
+
+        .indicator {
+            position: absolute;
+            height: 100%;
+            width: 2px;
+            background-color: black;
+            top: 0;
+            z-index: 2;
         }
-        .info-table {
-            margin: 0;
+
+        .background-layer {
+            position: absolute;
+            height: 100%;
+            top: 0;
         }
-        .info-table td {
-            padding: 3px 10px;
+
+        .green-layer {
+            background-color: green;
+            z-index: 1;
         }
-        .info-table td:first-child {
+
+        .yellow-layer {
+            background-color: yellow;
+            z-index: 1;
+        }
+
+        .red-layer {
+            background-color: red;
+            z-index: 1;
+        }
+
+        .live-percentage {
+            position: absolute;
+            top: 35px;
+            left: 0;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: black;
+        }
+    </style>
+
+     <!-- Hourly graph -->
+    
+    <style type="text/css">
+        .axis .domain {
+            display: none;
+        }
+
+        body {
+            font-family: 'Droid Sans', sans-serif;
+        }
+
+        .axis {
+            font-size: 14px;
             font-weight: bold;
         }
 
-        .left-section {
-    display: flex;
-    align-items: center;
-}
+        text {
+            fill: #727075;
+            stroke: none;
+        }
 
-.logo,
-.info-table {
-    border: 1px solid black; 
-    border: 1px solid black; 
-    padding: 10px; /
-}
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: none;
+            stroke-width: 2px;
+            shape-rendering: crispEdges;
+        }
 
-.logo {
-    margin-right: 10px; 
-}
-    </style>  
-        <style>
-            .info-container1 {
-                border: 1px solid #000;
-                padding: 10px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+        .grid path {
+            stroke: none;
+        }
+
+        .grid line {
+            stroke: #E0E0E0;
+            shape-rendering: crispEdges;
+        }
+
+        .data-line {
+            fill: none;
+            stroke: #3C92BA;
+            stroke-width: 4px;
+        }
+
+        .data-circle {
+            fill: #3C92BA;
+        }
+
+        .axis-title {
+            text-anchor: end;
+            fill: #5D6971;
+            font-weight: normal;
+        }
+
+        .axis-tspan {
+            font-size: 12px;
+        }
+
+        .clinical-cut-off-line {
+            fill: none;
+            stroke: #333333;
+            stroke-dasharray: 8,8;
+            stroke-width: 4px;
+        }
+
+        .clinical-cut-off-text {
+            text-transform: uppercase;
+            text-anchor: start;
+            font-size: 12px;
+            font-weight: bold;
+            fill: #333333;
+            stroke: none
+        }
+
+        @-webkit-keyframes pulse {
+            0% {
+                opacity: 1;
             }
-            .info-box1 {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 15px;
-                color: white;
-                font-weight: bold;
-                margin: 5px;
-                width: 187px;
+
+            50% {
+                opacity: 0.3;
             }
-            .ok-box1 {
-                background-color: green;
+
+            100% {
+                opacity: 1;
             }
-            .nok-box1 {
-                background-color: red;
-            }
-            .takt-time1 {
-                background-color: lightgray;
-                color: black;
-                padding: 10px;
-                font-weight: bold;
-            }
-            .progress-container1 {
-                width: 100%;
-                margin-left: 10px;
-            }
-           
-        </style>  
-        <style>
-            .chart-container {
-    display: table;
-    width: 100%;
-    border-collapse: collapse;
-}
+        }
 
-.chart {
-    display: table-cell;
-    border: 1px solid #000;
-    padding: 5px;
-    text-align: center;
-}
+        .bars-container-middle {
+            fill: none;
+            stroke: none;
+        }
 
-.table-like canvas {
-    display: block; 
-    max-width: 100%; 
-}
+        .clinically-significant-pulsing-rect {
+            fill: pink;
+            /* Giving Animation Function */
+            -webkit-animation: pulse 1.5s ease infinite;
+        }
+    </style>
 
-        </style>
+    <!-- Live Alam -->
 
-<style>
-    body {
-        font-family: Arial, sans-serif;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-    }
-    th, td {
-        border: 1px solid #ddd;
-        padding: 8px;
-    }
-    th {
-        background-color: #d32f2f;
-        color: white;
-        text-align: left;
-    }
-    tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-    tr:hover {
-        background-color: #ddd;
-    }
-    td {
-        background-color: #e0e0e0;
-    }
-    
+    <style>
+        .table-responsive {
+            height: 100px; /* Adjust the height as needed */
+            overflow-y: auto;
+        }
 
+        .table thead th {
+            position: -webkit-sticky; /* For Safari */
+            position: sticky;
+            top: 0;
+            background-color: red; /* Reapply background color for the sticky header */
+            color: #fff;
+        }
+    </style>
 
-</style>
 </head>
-<body><br><br>
-    <div class="container mt-5">
-     
-        <div class="info-container">
-            <div class="left-section">
-                <img src="assets/download-removebg-preview.png" alt="TVS Logo" class="logo">
-    
-                <table class="info-table">
-                    <tr>
-                        <td>STATION NO:</td>
-                        <td>
-                          <select id="station-select" style="background-color: whitesmoke;">
-                            <option value="OP10">OP10</option>
-                
-                          </select>
-                        </td>
-                        
-                    </tr>
-                    <tr>
-                        <td>STATION NAME:</td>
-                        <td>{{station_name}}</td>
-                    </tr>
-                    <tr>
-                        <td>EMPLOYEE NO:</td>
-                        <td>{{emp_number}}</td>
-                    </tr>
-                    <tr>
-                        <td>EMPLOYEE NAME:</td>
-                        <td>{{emp_name}}</td>
-                    </tr>
-                </table>
+<body>
+    <div class="row" id="Historic" style="padding: 20px;">
+        <div class="col-md-12">
+            <div class="col-md-2" style="border:1px solid black;height: 120px;border-bottom: none;">
+                <div class="panel-body">
+                    <img src="{% static 'images/teallogo.png' %}" style="width:200px;" />
+                </div>
             </div>
-            <div class="right-section">
-                <table class="info-table">
-                    <tr>
-                        <td>Model:</td>
-                        <td>{{variant}}</td>
-                    </tr>
-                    <tr>
-                        <td>Serial No:</td>
-                        <td>{{serial_number}}</td>
-                    </tr>
-                    <tr>
-                        <td>Shift:</td>
-                        <td>{{shift}}</td>
-                    </tr>
-                    <tr>
-                        <td>Timestamp:</td>
-                        <td>10/07/2024 12:37</td>
-                    </tr>
-                </table>
-                <img src="assets/down1-removebg-preview.png" alt="Teal Logo" class="logo" style="margin-left: 10px;">
+            <div class="col-md-8" style="border:1px solid black;height: 120px;border-bottom: none;border-left: none;">
+                <div class="panel-body">
+                    <div class="form-group" id="div_dates">
+                        <div style="width:100%">
+                            <div style="width:40%;float:left;color:black">
+                                <p>
+                                    <strong>STATION NO : </strong>
+                                    <select id="station-no">
+                                        <option>{{station_name}}</option>
+                                    </select>
+                                    <br />
+                                    <strong>STATION NAME : <span id="station-name">{{station_name}}</span></strong>
+                                    <br />
+                                    <strong>EMPLOYEE NO : <span id="employee-no">{{emp_number}}</span></strong>
+                                    <br />
+                                    <strong>EMPLOYEE NAME : <span id="employee-name">{{emp_name}}</span></strong>
+                                </p>
+                            </div>
+                            <div style="width:20%;float:left;">
+                                <img src="{% static 'images/teallogo.png' %}" style="width:180px;" />
+                            </div>
+                            <div style="width: 20%; float: right; color: black">
+                                <p>
+                                    <strong>Model : <span id="model">{{variant}}</span></strong>
+                                    <br />
+                                    <strong>Serial No : <span id="serial-no">{{serial_number}}</span></strong>
+                                    <br />
+                                    <strong>Shift : <span id="shift">{{shift}}</span></strong>
+                                    <br />
+                                    <strong>Timestamp : <span id="timestamp">10/07/2024 12:37</span></strong>
+                                </p>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2" style="border:1px solid black;height: 120px;border-bottom: none;border-left: none;">
+                <div class="panel-body">
+                    <div class="form-group" id="div_dates">
+                        <img src="{% static 'images/teallogo.png' %}" style="width:200px;" />
+                    </div>
+                </div>
             </div>
         </div>
-            <div class="info-container1">
-                <div class="info-box1 ok-box1">
-                    <span>OK Parts</span>
-                    <span class="ml-2" id="ok-parts">{{ok_parts}}</span>
-                </div>
-                <div class="info-box1 nok-box1">
-                    <span>NOK Parts</span>
-                    <span class="ml-2" id="nok-parts">{{nok_parts}}</span>
-                </div>
-                <div class="takt-time1">
-                    <span>TAKT TIME (s)</span>
-                    <span class="ml-2" id="takt-time1">{{tack_time}}</span>
-                </div>
-                <div class="progress-container1" >
-                    <div class="progress-bar-container1">
-                        <div class="progress w-70" style="height: 1.75rem;">
-                            
-                            <div class="progress-bar bg-success" id="myBar" role="progressbar" style="width: 50%"></div>
-                            
-                            <!--div class="progress-bar bg-warning" id="progress-bar-yellow" role="progressbar" style="width: 10%"--><!--/div-->
-                           
-                            <!--div class="progress-bar bg-danger" id="progress-bar-red" role="progressbar" style="width: 10%"--><!--/div-->
+        <div class="col-md-12">
+            <div class="col-md-12" style="border:1px solid black;height: 100px;border-bottom: none;">
+                <section class="panel">
+                    <div class="panel-body">
+                        <div style="width:100%">
+                            <div style="width:15%;float: left;">
+                                <button class="btn btn-success">
+                                    OK Parts <br />
+                                    <span id="ok_parts">{{ok_parts}}</span>
+                                </button>
+                            </div>
+                            <div style="width:15%;float: left;">
+                                <button class="btn btn-danger">
+                                    NOK Parts <br />
+                                    <span id="nok_parts">{{nok_parts}}</span>
+                                </button>
+                            </div>
+                            <div class="container">
+                                <div class="text">TAKT TIME(s)</div>
+                                <button class="btn btn-danger1">
+                                    <span id="talk_time">{{tack_time}}</span>
+                                </button>
+                            </div>
+                            <!-- Live CT -->
+                            <div style="width:50%;float: right;">
+                                <div class="chart-container">
+                                    <div class="chart-values">
+                                        <span id="value-0">0</span>
+                                        <span id="value-50">50</span>
+                                        <span id="value-100">100</span>
+                                        <span id="value-150">150</span>
+                                        <span id="value-200">200</span>
+                                        <span id="value-250">250</span>
+                                    </div>
+                                    <div class="chart" id="chart">
+                                        <div id="greenLayer" class="background-layer green-layer"></div>
+                                        <div id="yellowLayer" class="background-layer yellow-layer"></div>
+                                        <div id="redLayer" class="background-layer red-layer"></div>
+                                        <div id="indicator" class="indicator"></div>
+                                        <span id="livePercentage" class="live-percentage">0%</span>
+                                    </div>
+                                    <div class="chart-percentages">
+                                        <span id="percent-0">0%</span>
+                                        <span id="percent-100">100%</span>
+                                        <span id="percent-120" style="margin-right: calc(40% - 57px);">120%</span>
+                                        <span id="percent-150">&gt;150%</span>
+                                    </div>
+                                </div>
+
+                                <script>
+                                    const chart = document.getElementById('chart');
+                                    const greenLayer = document.getElementById('greenLayer');
+                                    const yellowLayer = document.getElementById('yellowLayer');
+                                    const redLayer = document.getElementById('redLayer');
+                                    const indicator = document.getElementById('indicator');
+                                    const livePercentage = document.getElementById('livePercentage');
+
+                                    function updateChart(taktTime) {
+                                        const maxTime = 250;
+                                        const percentage = (taktTime / maxTime) * 100;
+
+
+                                        indicator.style.left = percentage + '%';
+
+                                        livePercentage.style.left = percentage + '%';
+                                        livePercentage.innerText = `${taktTime}%`;
+
+
+                                        greenLayer.style.width = '0%';
+                                        yellowLayer.style.width = '0%';
+                                        redLayer.style.width = '0%';
+
+                                        if (taktTime <= 100) {
+                                            greenLayer.style.width = (taktTime / maxTime) * 100 + '%';
+                                        } else if (taktTime > 100 && taktTime <= 120) {
+                                            greenLayer.style.width = (100 / maxTime) * 100 + '%';
+                                            yellowLayer.style.width = ((taktTime - 100) / maxTime) * 100 + '%';
+                                            yellowLayer.style.left = (100 / maxTime) * 100 + '%';
+                                        } else {
+                                            greenLayer.style.width = (100 / maxTime) * 100 + '%';
+                                            yellowLayer.style.width = ((20 / maxTime) * 100) + '%';
+                                            yellowLayer.style.left = (100 / maxTime) * 100 + '%';
+                                            redLayer.style.width = ((taktTime - 120) / maxTime) * 100 + '%';
+                                            redLayer.style.left = ((120 / maxTime) * 100) + '%';
+                                        }
+                                    }
+
+                                    // Example data update every 2 seconds
+                                    const taktTimes = [10, 75, 120, 175, 210, 230, 255];
+                                    let index = 0;
+
+                                    setInterval(() => {
+                                        if (index >= taktTimes.length) {
+                                            index = 0;
+                                        }
+                                        const taktTime = taktTimes[index++];
+                                        updateChart(taktTime);
+                                    }, 2000);
+                                </script>
+
+
+                                <div style="width:55%;float: left;">
+                                </div>
+                            </div>
+                        </div>
+                </section>
+            </div>
+        </div>
+        <!-- Hourly graph -->
+        <div class="col-md-12">
+            <div class="col-md-12" style="border:1px solid black;height: 250px;border-bottom: none;">
+                <section class="panel">
+                    <div class="panel-body">
+                        <div id="Shift_1" style="width:33%;float: left;">
+                            <p style="text-align: center;font-weight: bold;font-size: 18px;">Shift 1</p>
+                            <svg width="350" height="300"></svg>
+                        </div>
+                        <div id="Shift_2" style="width:33%;float: left;">
+                            <p style="text-align: center;font-weight: bold;font-size: 18px;">Shift 2</p>
+                            <svg width="350" height="300"></svg>
+                        </div>
+                        <div id="Shift_3" style="width:33%;float: right;">
+                            <p style="text-align: center;font-weight: bold;font-size: 18px;">Shift 3</p>
+                            <svg width="350" height="300"></svg>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between mt-2">
-                        <span>0 %</span>
-                        <span>100 %</span>
-                        <span>120 %</span>
-                        <span>>150 %</span>
+                </section>
+            </div>
+        </div>
+
+        <!-- Liva alarm -->
+
+        <div class="col-md-12">
+            <div class="col-md-12" style="border:1px solid black;height: 150px;">
+                <section class="panel" style="padding-left: 0px !important;">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-condensed mb-none">
+                                <thead>
+                                    <tr>
+                                        <th>Start Time</th>
+                                        <th>Active Alarms</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td id="start-time-1">28-07-2024 10:50</td>
+                                        <td id="alarm-1">Scanned node failed error</td>
+                                    </tr>
+                                    <tr>
+                                        <td id="start-time-2">29-07-2024 1:20</td>
+                                        <td id="alarm-2">Emergency pressed in station</td>
+                                    </tr>
+                                    <!-- Add more rows as needed -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
+                </section>
             </div>
-            <div class="chart-container" style="border: 1px solid black; height: 300px;">
-                <div class="chart table-like" style="border: 1px solid black; padding: 10px;">
-                    <canvas id="shift1Chart"></canvas>
-                </div>
-                <div class="chart table-like" style="border: 1px solid black; padding: 10px;">
-                    <canvas id="shift2Chart"></canvas>
-                </div>
-                <div class="chart table-like" style="border: 1px solid black; padding: 10px;">
-                    <canvas id="shift3Chart"></canvas>
-                </div>
-            </div>
-            
-            
-            <table style="border: 1px solid black; border-collapse: collapse; width: 100%; margin-top: -1px;">
-                <tr>
-                    <th style="border: 1px solid black; padding: 8px;">Start Time</th>
-                    <th style="border: 1px solid black; padding: 8px;">Active Alarms</th>
-                </tr>
-                <tr>
-                    <td style="border: 1px solid black; padding: 8px;">10/07/2024 12:30:00.000</td>
-                    <td style="border: 1px solid black; padding: 8px;">Scanner node failed error</td>
-                </tr>
-                <tr>
-                    <td style="border: 1px solid black; padding: 8px;">10/07/2024 12:31:00.000</td>
-                    <td style="border: 1px solid black; padding: 8px;">Emergency pressed in station</td>
-                </tr>
-                <tr>
-                    <td style="border: 1px solid black; padding: 8px;">10/07/2024 12:35:00.000</td>
-                    <td style="border: 1px solid black; padding: 8px;">Home position signal lost in station</td>
-                </tr>
-            </table>
-            
+
+        </div>
+
+    </div>
+
+    <script src= "{% static 'javascripts/swal.js' %}"></script>
+    <script src= "{% static 'javascripts/swal_alert.js' %}"></script>
+    <script src= "{% static 'datepicker_normal/datepicker_normal_jquery.min.js' %}"></script>
+    <script src= "{% static 'datepicker_normal/jquery-ui-1.8.19.custom.min.js' %}"></script>
+<!--    <script src= "{% static 'Scripts/bootstrap-datepicker.js' %}"></script>-->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <!-- Hourly -->
+    <script type="text/javascript">
+        function Get_S1() {
+            var svg = d3.select("#Shift_1 svg"),
+                margin = { top: 20, right: 20, bottom: 30, left: 40 },
+                width = +svg.attr("width") - margin.left - margin.right,
+                height = +svg.attr("height") - margin.top - margin.bottom,
+                // g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                g = svg.append("g").attr("transform", "translate(" + margin.left + ",-20)");
+            var x0 = d3.scaleBand()
+                .rangeRound([0, width])
+                .paddingInner(0.2);
+
+            var x1 = d3.scaleBand()
+                .padding(0.1);
+
+            var y = d3.scaleLinear()
+                .rangeRound([(height / 1.75), 0]);
+
+            var z = d3.scaleOrdinal()
+                .range(["#37A3D6", "#f94830", "#ff0000"]);
+
+            var clinicalCutOffValue = 65;
+
+            //d3.json("data.json", function(error, data) {
+
+            var data = [
+                {
+                    "State": "1",
+                    "values": [
+                        { "value": 80, "type": "Before Treatment" },
+                        { "value": 73, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "2",
+                    "values": [
+                        { "value": 77, "type": "Before Treatment" },
+                        { "value": 78, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "3",
+                    "values": [
+                        { "value": 80, "type": "Before Treatment" },
+                        { "value": 73, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "4",
+                    "values": [
+                        { "value": 83, "type": "Before Treatment" },
+                        { "value": 78, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "5",
+                    "values": [
+                        { "value": 52, "type": "Before Treatment" },
+                        { "value": 73, "type": "After Treatment" },
+                    ]
+                },
+                {
+                    "State": "6",
+                    "values": [
+                        { "value": 22, "type": "Before Treatment" },
+                        { "value": 73, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "7",
+                    "values": [
+                        { "value": 78, "type": "Before Treatment" },
+                        { "value": 55, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "8",
+                    "values": [
+                        { "value": 63, "type": "Before Treatment" },
+                        { "value": 15, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "Avg",
+                    "values": [
+                        { "value": 90, "type": "Before Treatment" },
+                        { "value": 45, "type": "After Treatment" },
+
+                    ]
+                }
+            ];
+
+
+            //if (error) throw error;
+
+            var categoriesNames = data.map(function (d) { return d.State; });
+            var rateNames = data[0].values.map(function (d) { return d.type; });
+
+            x0.domain(categoriesNames);
+            x1.domain(rateNames).rangeRound([0, x0.bandwidth()]);
+            y.domain([0, d3.max(data, function (categorie) { return d3.max(categorie.values, function (d) { return d.value; }); }) * 1.2]);
+            //  y.domain([60, 85]);
+
+            // // var legend = g.append("g")
+            // //       .attr("class", "legend");
+
+            // // var legenG = legend.selectAll("g")
+            // //     .data(data[0].values.map(function(d) { return d.type; }))
+            // //     .enter()
+            // //   .append("g")
+            // //     .attr("transform", function(d, i) { return "translate(" + i * (width / (rateNames.length + 1)) + ", 0)"; });
+
+            // legenG.append("rect")
+            //     .attr("x", 0)
+            //     .attr("width", 20)
+            //     .attr("height", 20)
+            //     .attr("fill", z);
+
+            // legenG.append("text")
+            //     .attr("x", 25)
+            //     .attr("y", 9.5)
+            //     .attr("dy", "0.32em")
+            //     .text(function(d) { return d; });
+
+            // var cliniciallySignificantLegend = legend.append("g")
+            //     .attr("transform", function(d, i) {
+            //           return "translate(" + width / (rateNames.length + 1) + ", 0)";
+            //       });
+
+            // cliniciallySignificantLegend
+            //   .append("rect")
+            //     .attr("x", (width / 2))
+            //     .attr("width", 20)
+            //     .attr("height", 20)
+            //    .attr("class", "bars-container-middle clinically-significant-pulsing-rect");
+
+            //cliniciallySignificantLegend.append("text")
+            //    .attr("x", (width / 2) + 25)
+            //    .attr("y", 9.5)
+            //    .attr("dy", "0.32em")
+            //    .text("Clinicially Significant");
+
+            // add the Y gridlines
+            g.append("g")
+                .attr("class", "grid")
+                .attr("transform", "translate(0," + (height / 7) + ")")
+                .call(d3.axisLeft(y)
+                    .tickSize(-width)
+                    .tickFormat("")
+                    .ticks(6)
+                );
+
+            var barG = g.append("g")
+                .selectAll("g")
+                .data(data)
+                .enter()
+                .append("g")
+                .attr("transform", function (d) { return "translate(" + x0(d.State) + ",0)"; });
+
+            barG.selectAll(".bars-container-middle")
+                .data(function (d) { return d.values; })
+                .enter()
+                .append("rect")
+            //.attr("class", function(d) {
+            //if (d.significant) return 'bars-container-middle clinically-significant-pulsing-rect';
+            //else return 'bars-container-middle';
+            //})
+            //.attr("transform", "translate(0," + (height / 7) + ")")
+            //  .attr("x", function(d) { return x1(d.type); })
+            // .attr("y", function(d) { return 0; })
+            //  .attr("width", x1.bandwidth())
+            //  .transition()
+            //  .delay(function (d,i){ return 750;}) // this is to do left then right bars
+            //  .duration(250)
+            //   .attr('height', function( d ) {
+            //              if (d.value > 0) { return (height / 1.75); }
+            //              else {return 0}
+            //      })
+
+            barG.selectAll(".bars")
+                .data(function (d) { return d.values; })
+                .enter()
+                .append("rect")
+                .attr("class", "bars")
+                .attr("transform", "translate(0," + (height / 7) + ")")
+                .attr("x", function (d) { return x1(d.type); })
+                .attr("width", x1.bandwidth())
+                .attr("fill", function (d) { return z(d.type); })
+                .attr("y", (height / 2))
+                .transition()
+                .delay(function (d, i) { return i * 250; }) // this is to do left then right bars
+                .duration(250)
+                .attr("y", function (d) { return y(d.value); })
+                .attr('height', function (d) {
+                    if (d.value > 0) { return ((height / 1.75)) - y(d.value); }
+                    else { return 0 }
+                });
+
+            g.append("g")
+                .attr("class", "x-axis axis")
+                .attr("transform", "translate(20," + (height / 1.4) + ")")
+                .call(d3.axisBottom(x0))
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                // .attr("transform", "rotate(-65)")
+                .text(function (d) {
+                    if (d.length > 14) { return d.substring(0, 14) + '...'; }
+                    else { return d; }
+                });
+
+            var value = g.append("text")
+                .attr("class", "x-axis-label")
+                .text("Hour")
+                .style("font-weight", "bold")
+                .style("font-size", "13px");
+            var valueWidth = value.node().getComputedTextLength();
+            var xValueTranslate = ((innerWidth - valueWidth) / 2) + margin.left;
+            //value.attr("transform", "translate(" + xValueTranslate + "," + (height - (margin.bottom / 3)) + ")");
+            value.attr("transform", "translate(100,210)");
+
+            g.append("g")
+                .attr("class", "y-axis axis")
+                .attr("transform", "translate(0," + (height / 7) + ")")
+                .call(d3.axisLeft(y).ticks(7));
+
+            g.append("text")
+                .attr("class", "y-axis-label")
+                .attr("x", -height / 2.3)
+                .attr("y", (margin.left / 4) - 40)
+                .attr("transform", "rotate(-90)")
+                .attr("text-anchor", "middle")
+                .attr("font-weight", "bold")
+                .attr("font-size", "13px")
+                .text("Production Count");
+
+            // Clinicial cut off line and text group
+            //    var clinicalCutOffLineAndText = g.append("g")
+            //      .attr("class", "clinical-cut-off-line-and-text")
+            //        .attr("transform", "translate(0," + (height / 7) + ")")
+
+            // Clinicial cut off line
+            // clinicalCutOffLineAndText.append("line")
+            //      .attr("class", "clinical-cut-off-line")
+            //      .attr("x1", 0)
+            //     .attr("y1", y(clinicalCutOffValue))
+            //     .attr("x2", width)
+            //     .attr("y2", y(clinicalCutOffValue));
+
+            // Clinicial cut off text
+            // clinicalCutOffLineAndText.append("text")
+            //     .attr("class", "clinical-cut-off-text")
+            //     .attr("y", y(clinicalCutOffValue))
+            //     .attr("dy","20px")
+            //     .text("Clinical Cut-off");
+            //});
+        }
+        function Get_S2() {
+            var svg = d3.select("#Shift_2 svg"),
+                margin = { top: 20, right: 20, bottom: 30, left: 40 },
+                width = +svg.attr("width") - margin.left - margin.right,
+                height = +svg.attr("height") - margin.top - margin.bottom,
+                // g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                g = svg.append("g").attr("transform", "translate(" + margin.left + ",-20)");
+            var x0 = d3.scaleBand()
+                .rangeRound([0, width])
+                .paddingInner(0.2);
+
+            var x1 = d3.scaleBand()
+                .padding(0.1);
+
+            var y = d3.scaleLinear()
+                .rangeRound([(height / 1.75), 0]);
+
+            var z = d3.scaleOrdinal()
+                .range(["#37A3D6", "#f94830", "#ff0000"]);
+
+            var clinicalCutOffValue = 65;
+
+            //d3.json("data.json", function(error, data) {
+
+            var data = [
+                {
+                    "State": "1",
+                    "values": [
+                        { "value": 80, "type": "Before Treatment" },
+                        { "value": 73, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "2",
+                    "values": [
+                        { "value": 77, "type": "Before Treatment" },
+                        { "value": 78, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "3",
+                    "values": [
+                        { "value": 80, "type": "Before Treatment" },
+                        { "value": 73, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "4",
+                    "values": [
+                        { "value": 83, "type": "Before Treatment" },
+                        { "value": 78, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "5",
+                    "values": [
+                        { "value": 52, "type": "Before Treatment" },
+                        { "value": 73, "type": "After Treatment" },
+                    ]
+                },
+                {
+                    "State": "6",
+                    "values": [
+                        { "value": 22, "type": "Before Treatment" },
+                        { "value": 73, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "7",
+                    "values": [
+                        { "value": 78, "type": "Before Treatment" },
+                        { "value": 55, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "8",
+                    "values": [
+                        { "value": 63, "type": "Before Treatment" },
+                        { "value": 15, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "Avg",
+                    "values": [
+                        { "value": 90, "type": "Before Treatment" },
+                        { "value": 45, "type": "After Treatment" },
+
+                    ]
+                }
+            ];
+
+
+            //if (error) throw error;
+
+            var categoriesNames = data.map(function (d) { return d.State; });
+            var rateNames = data[0].values.map(function (d) { return d.type; });
+
+            x0.domain(categoriesNames);
+            x1.domain(rateNames).rangeRound([0, x0.bandwidth()]);
+            y.domain([0, d3.max(data, function (categorie) { return d3.max(categorie.values, function (d) { return d.value; }); }) * 1.2]);
+            //  y.domain([60, 85]);
+
+            // // var legend = g.append("g")
+            // //       .attr("class", "legend");
+
+            // // var legenG = legend.selectAll("g")
+            // //     .data(data[0].values.map(function(d) { return d.type; }))
+            // //     .enter()
+            // //   .append("g")
+            // //     .attr("transform", function(d, i) { return "translate(" + i * (width / (rateNames.length + 1)) + ", 0)"; });
+
+            // legenG.append("rect")
+            //     .attr("x", 0)
+            //     .attr("width", 20)
+            //     .attr("height", 20)
+            //     .attr("fill", z);
+
+            // legenG.append("text")
+            //     .attr("x", 25)
+            //     .attr("y", 9.5)
+            //     .attr("dy", "0.32em")
+            //     .text(function(d) { return d; });
+
+            // var cliniciallySignificantLegend = legend.append("g")
+            //     .attr("transform", function(d, i) {
+            //           return "translate(" + width / (rateNames.length + 1) + ", 0)";
+            //       });
+
+            // cliniciallySignificantLegend
+            //   .append("rect")
+            //     .attr("x", (width / 2))
+            //     .attr("width", 20)
+            //     .attr("height", 20)
+            //    .attr("class", "bars-container-middle clinically-significant-pulsing-rect");
+
+            //cliniciallySignificantLegend.append("text")
+            //    .attr("x", (width / 2) + 25)
+            //    .attr("y", 9.5)
+            //    .attr("dy", "0.32em")
+            //    .text("Clinicially Significant");
+
+            // add the Y gridlines
+            g.append("g")
+                .attr("class", "grid")
+                .attr("transform", "translate(0," + (height / 7) + ")")
+                .call(d3.axisLeft(y)
+                    .tickSize(-width)
+                    .tickFormat("")
+                    .ticks(6)
+                );
+
+            var barG = g.append("g")
+                .selectAll("g")
+                .data(data)
+                .enter()
+                .append("g")
+                .attr("transform", function (d) { return "translate(" + x0(d.State) + ",0)"; });
+
+            barG.selectAll(".bars-container-middle")
+                .data(function (d) { return d.values; })
+                .enter()
+                .append("rect")
+            //.attr("class", function(d) {
+            //if (d.significant) return 'bars-container-middle clinically-significant-pulsing-rect';
+            //else return 'bars-container-middle';
+            //})
+            //.attr("transform", "translate(0," + (height / 7) + ")")
+            //  .attr("x", function(d) { return x1(d.type); })
+            // .attr("y", function(d) { return 0; })
+            //  .attr("width", x1.bandwidth())
+            //  .transition()
+            //  .delay(function (d,i){ return 750;}) // this is to do left then right bars
+            //  .duration(250)
+            //   .attr('height', function( d ) {
+            //              if (d.value > 0) { return (height / 1.75); }
+            //              else {return 0}
+            //      })
+
+            barG.selectAll(".bars")
+                .data(function (d) { return d.values; })
+                .enter()
+                .append("rect")
+                .attr("class", "bars")
+                .attr("transform", "translate(0," + (height / 7) + ")")
+                .attr("x", function (d) { return x1(d.type); })
+                .attr("width", x1.bandwidth())
+                .attr("fill", function (d) { return z(d.type); })
+                .attr("y", (height / 2))
+                .transition()
+                .delay(function (d, i) { return i * 250; }) // this is to do left then right bars
+                .duration(250)
+                .attr("y", function (d) { return y(d.value); })
+                .attr('height', function (d) {
+                    if (d.value > 0) { return ((height / 1.75)) - y(d.value); }
+                    else { return 0 }
+                });
+
+
+
+            g.append("g")
+                .attr("class", "x-axis axis")
+                .attr("transform", "translate(20," + (height / 1.4) + ")")
+                .call(d3.axisBottom(x0))
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                // .attr("transform", "rotate(-65)")
+                .text(function (d) {
+                    if (d.length > 14) { return d.substring(0, 14) + '...'; }
+                    else { return d; }
+                });
+
+            var value = g.append("text")
+                .attr("class", "x-axis-label")
+                .text("Hour")
+                .style("font-weight", "bold")
+                .style("font-size", "13px");
+            var valueWidth = value.node().getComputedTextLength();
+            var xValueTranslate = ((innerWidth - valueWidth) / 2) + margin.left;
+            //value.attr("transform", "translate(" + xValueTranslate + "," + (height - (margin.bottom / 3)) + ")");
+            value.attr("transform", "translate(100,210)");
+
+
+            g.append("g")
+                .attr("class", "y-axis axis")
+                .attr("transform", "translate(0," + (height / 7) + ")")
+                .call(d3.axisLeft(y).ticks(7));
+
+            g.append("text")
+                .attr("class", "y-axis-label")
+                .attr("x", -height / 2.3)
+                .attr("y", (margin.left / 4) - 40)
+                .attr("transform", "rotate(-90)")
+                .attr("text-anchor", "middle")
+                .attr("font-weight", "bold")
+                .attr("font-size", "13px")
+                .text("Production Count");
+
+            // Clinicial cut off line and text group
+            //    var clinicalCutOffLineAndText = g.append("g")
+            //      .attr("class", "clinical-cut-off-line-and-text")
+            //        .attr("transform", "translate(0," + (height / 7) + ")")
+
+            // Clinicial cut off line
+            // clinicalCutOffLineAndText.append("line")
+            //      .attr("class", "clinical-cut-off-line")
+            //      .attr("x1", 0)
+            //     .attr("y1", y(clinicalCutOffValue))
+            //     .attr("x2", width)
+            //     .attr("y2", y(clinicalCutOffValue));
+
+            // Clinicial cut off text
+            // clinicalCutOffLineAndText.append("text")
+            //     .attr("class", "clinical-cut-off-text")
+            //     .attr("y", y(clinicalCutOffValue))
+            //     .attr("dy","20px")
+            //     .text("Clinical Cut-off");
+            //});
+        }
+
+        function Get_S3() {
+            var svg = d3.select("#Shift_3 svg"),
+                margin = { top: 20, right: 20, bottom: 30, left: 40 },
+                width = +svg.attr("width") - margin.left - margin.right,
+                height = +svg.attr("height") - margin.top - margin.bottom,
+                // g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                g = svg.append("g").attr("transform", "translate(" + margin.left + ",-20)");
+            var x0 = d3.scaleBand()
+                .rangeRound([0, width])
+                .paddingInner(0.2);
+
+            var x1 = d3.scaleBand()
+                .padding(0.1);
+
+            var y = d3.scaleLinear()
+                .rangeRound([(height / 1.75), 0]);
+
+            var z = d3.scaleOrdinal()
+                .range(["#37A3D6", "#f94830", "#ff0000"]);
+
+            var clinicalCutOffValue = 65;
+
+            //d3.json("data.json", function(error, data) {
+
+            var data = [
+                {
+                    "State": "1",
+                    "values": [
+                        { "value": 80, "type": "Before Treatment" },
+                        { "value": 73, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "2",
+                    "values": [
+                        { "value": 77, "type": "Before Treatment" },
+                        { "value": 78, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "3",
+                    "values": [
+                        { "value": 80, "type": "Before Treatment" },
+                        { "value": 73, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "4",
+                    "values": [
+                        { "value": 83, "type": "Before Treatment" },
+                        { "value": 78, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "5",
+                    "values": [
+                        { "value": 52, "type": "Before Treatment" },
+                        { "value": 73, "type": "After Treatment" },
+                    ]
+                },
+                {
+                    "State": "6",
+                    "values": [
+                        { "value": 22, "type": "Before Treatment" },
+                        { "value": 73, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "7",
+                    "values": [
+                        { "value": 78, "type": "Before Treatment" },
+                        { "value": 55, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "8",
+                    "values": [
+                        { "value": 63, "type": "Before Treatment" },
+                        { "value": 15, "type": "After Treatment" },
+
+                    ]
+                },
+                {
+                    "State": "Avg",
+                    "values": [
+                        { "value": 90, "type": "Before Treatment" },
+                        { "value": 45, "type": "After Treatment" },
+
+                    ]
+                }
+            ];
+
+
+            //if (error) throw error;
+
+            var categoriesNames = data.map(function (d) { return d.State; });
+            var rateNames = data[0].values.map(function (d) { return d.type; });
+
+            x0.domain(categoriesNames);
+            x1.domain(rateNames).rangeRound([0, x0.bandwidth()]);
+            y.domain([0, d3.max(data, function (categorie) { return d3.max(categorie.values, function (d) { return d.value; }); }) * 1.2]);
+            //  y.domain([60, 85]);
+
+
+            // add the Y gridlines
+            g.append("g")
+                .attr("class", "grid")
+                .attr("transform", "translate(0," + (height / 7) + ")")
+                .call(d3.axisLeft(y)
+                    .tickSize(-width)
+                    .tickFormat("")
+                    .ticks(6)
+                );
+
+            var barG = g.append("g")
+                .selectAll("g")
+                .data(data)
+                .enter()
+                .append("g")
+                .attr("transform", function (d) { return "translate(" + x0(d.State) + ",0)"; });
+
+            barG.selectAll(".bars-container-middle")
+                .data(function (d) { return d.values; })
+                .enter()
+                .append("rect")
+
+            barG.selectAll(".bars")
+                .data(function (d) { return d.values; })
+                .enter()
+                .append("rect")
+                .attr("class", "bars")
+                .attr("transform", "translate(0," + (height / 7) + ")")
+                .attr("x", function (d) { return x1(d.type); })
+                .attr("width", x1.bandwidth())
+                .attr("fill", function (d) { return z(d.type); })
+                .attr("y", (height / 2))
+                .transition()
+                .delay(function (d, i) { return i * 250; }) // this is to do left then right bars
+                .duration(250)
+                .attr("y", function (d) { return y(d.value); })
+                .attr('height', function (d) {
+                    if (d.value > 0) { return ((height / 1.75)) - y(d.value); }
+                    else { return 0 }
+                });
+
+            g.append("g")
+                .attr("class", "x-axis axis")
+                .attr("transform", "translate(20," + (height / 1.4) + ")")
+                .call(d3.axisBottom(x0))
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                // .attr("transform", "rotate(-65)")
+                .text(function (d) {
+                    if (d.length > 14) { return d.substring(0, 14) + '...'; }
+                    else { return d; }
+                });
+
+            var value = g.append("text")
+                .attr("class", "x-axis-label")
+                .text("Hour")
+                .style("font-weight", "bold")
+                .style("font-size", "13px");
+            var valueWidth = value.node().getComputedTextLength();
+            var xValueTranslate = ((innerWidth - valueWidth) / 2) + margin.left;
+            //value.attr("transform", "translate(" + xValueTranslate + "," + (height - (margin.bottom / 3)) + ")");
+            value.attr("transform", "translate(100,210)");
+
+            g.append("g")
+                .attr("class", "y-axis axis")
+                .attr("transform", "translate(0," + (height / 7) + ")")
+                .call(d3.axisLeft(y).ticks(7));
+
+            g.append("text")
+                .attr("class", "y-axis-label")
+                .attr("x", -height / 2.3)
+                .attr("y", (margin.left / 4) - 40)
+                .attr("transform", "rotate(-90)")
+                .attr("text-anchor", "middle")
+                .attr("font-weight", "bold")
+                .attr("font-size", "13px")
+                .text("Production Count");
+        }
+        Get_S1();
+        Get_S2();
+        Get_S3();
+    </script>
+
 </body>
+</html>
+
 <script>
-    
-    document.getElementById('ok-paarts').innerText = '29';
-    document.getElementById('nok-parts').innerText = '5';
-    document.getElementById('takt-time').innerText = '255';
 
-  
-    document.getElementById('progress-bar-green').style.width = '80%';
-    document.getElementById('progress-bar-yellow').style.width = '10%';
-    document.getElementById('progress-bar-red').style.width = '10%';
-</script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        
-        var shift1Data = [30, 50, 40, 70, 25];
-        var shift2Data = [45, 25, 55, 30, 40];
-        var shift3Data = [20, 35, 45, 60, 30];
+    $(document).ready(function () {
 
-  
-        var ctx1 = document.getElementById('shift1Chart').getContext('2d');
-        var ctx2 = document.getElementById('shift2Chart').getContext('2d');
-        var ctx3 = document.getElementById('shift3Chart').getContext('2d');
 
-        var shift1Chart = new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5'],
-                datasets: [{
-                    label: 'Shift 1',
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1,
-                    data: shift1Data
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+        var stationNo = $("#station-no").text("stat");
+        var stationName = $("#station-name").text("sanjay");
+        var employeeNo = $("#employee-no").text(employeeNo);
+        var employeeName = $("#employee-name").text(employeeName);
+        var model = $("#model").text(model);
+        var serialNo = $("#serial-no").text(serialNo);
+        var shift = $("#shift").text(shift);
+        var timestamp = $("#timestamp").text(timestamp);
+        var okParts = $("#ok_parts").text();
+        var nanParts = $("#nok_parts").text();
+        var talkTime = $("#talk_time").text();
+        var value0 = $("#value-0").text();
+        var percent0 = $("#percent-0").text();
+        var starttime = $("#start-time-1").text();
+        var alarm1 = $("#alarm-1").text();
 
-        var shift2Chart = new Chart(ctx2, {
-            type: 'bar',
-            data: {
-                labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5'],
-                datasets: [{
-                    label: 'Shift 2',
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1,
-                    data: shift2Data
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
 
-        var shift3Chart = new Chart(ctx3, {
-            type: 'bar',
-            data: {
-                labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5'],
-                datasets: [{
-                    label: 'Shift 3',
-                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                    data: shift3Data
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+        console.log("stationNo : " + stationNo);
+        console.log("stationName : " + stationName);
+        console.log("employeeNo : " + employeeNo);
+        console.log("employeeName : " + employeeName);
+        console.log("model : " + model);
+        console.log("serialNo : " + serialNo);
+        console.log("shift : " + shift);
+        console.log("timestamp : " + timestamp);
+        console.log("okParts : " + okParts );
+        console.log("nanParts : " + nanParts );
+        console.log("talkTime : " + talkTime);
+        console.log("value0 : " + value0);
+        console.log("percent0 : " + percent0);
+        console.log("starttime : " + starttime);
+        console.log("alarm1 : " + alarm1);
     });
 </script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-
-<script>
+<script>   // sanjay
 
 function backend_call(){
-
-const path = window.location.pathname;
-const segments = path.split('/');
-const lastSegment = segments[segments.length - 1];
-const lastSegmentTrimmed = lastSegment || segments[segments.length - 2];
-
-
- var url = 'http://127.0.0.1:8000/dashboard/ajax/'+lastSegmentTrimmed;
+ var url = 'http://10.141.45.203:8000/dashboard/ajax/{{plc_name}}/{{station_name}}';
 
 fetch(url)
         .then(response => response.json())
         .then(data => {
            console.log(data.ok_parts);
-           document.getElementById('ok-parts').innerText = data.ok_parts;
-           document.getElementById('nok-parts').innerText = data.nok_parts;
-           document.getElementById('takt-time1').innerText = data.tack_time;
-           console.log(data.tack_time);
-           //document.getElementById('ok-parts').innerText = data.cycletime;
-           //document.getElementById('ok-parts').innerText = data.emp_name;
-           //document.getElementById('ok-parts').innerText = data.emp_code;
-           //document.getElementById('ok-parts').innerText = data.model;
+           document.getElementById('ok_parts').textContent = data.ok_parts;
+           document.getElementById('nok_parts').textContent = data.nok_parts;
+          // document.getElementById('talk_time').textContent = data.takt_time;
+           document.getElementById('talk_time').textContent = data.cycle_time;
+           document.getElementById('model').innerText = data.model_no;
            //document.getElementById('ok-parts').innerText = data.sr_no;
            //document.getElementById('ok-parts').innerText = data.shift;
+           //document.getElementById('ok-parts').innerText = data.emp_name;
+           //document.getElementById('ok-parts').innerText = data.emp_code;
         });
-
 }
+backend_call();
  window.onload = function() {
             setInterval(backend_call, 2000); // 2000 milliseconds = 2 seconds
         };
-</script>
 
-</html>
+
+
+  </script>
